@@ -22,7 +22,7 @@ PORT_MAX = 60000
 PROTOCOL_ORDER = ["vless", "trojan", "vmess"]
 PROTOCOL_SUFFIX = {"vless": "vl", "trojan": "tr", "vmess": "vm"}
 PROTOCOL_LABEL = {"vless": "VLESS", "trojan": "TROJAN", "vmess": "VMESS"}
-PROTOCOL_QUERY_FLAG = {"vless": "ev", "trojan": "et", "vmess": "evm"}
+PROTOCOL_QUERY_FLAG = {"vless": "ev", "trojan": "et", "vmess": "mess"}
 MANAGED_RULE_PREFIX = "3x-ui-auto "
 
 
@@ -542,13 +542,14 @@ def restart_xui() -> None:
 
 
 def build_links(user_uuid: str, domain: str, routes: List[Dict[str, Any]]) -> Dict[str, str]:
-    base_url = f"https://yx.xiamin.de5.net/{user_uuid}/sub"
+    # 你已经修改好的你自己的 Worker 地址
+    base_url = f"https://yx.xiamin.de5.net/{user_uuid}/sub" 
+    
+    # 将你的 GitHub CSV 直链强制注入到生成的订阅链接中
     common = {
         "domain": domain,
-        "epd": "yes",
-        "epi": "yes",
-        "egi": "no",
-        "dkby": "yes",
+        "csv": "https://raw.githubusercontent.com/xm0786114-bot/cf-speedtest-data/main/result.csv",
+        "dkby": "yes", # 启用仅 TLS 节点
     }
 
     links = {}
@@ -557,7 +558,7 @@ def build_links(user_uuid: str, domain: str, routes: List[Dict[str, Any]]) -> Di
         params = dict(common)
         params["ev"] = "no"
         params["et"] = "no"
-        params["evm"] = "no"
+        params["mess"] = "no"  # 这里也要对应改成 mess
         params[PROTOCOL_QUERY_FLAG[protocol]] = "yes"
         params["path"] = route["path"]
         links[protocol] = f"{base_url}?{parse.urlencode(params, safe='', quote_via=parse.quote)}"
